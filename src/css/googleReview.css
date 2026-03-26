@@ -1,0 +1,57 @@
+/* Ensure Swiper containers allow overflow */
+.swiper,
+.swiper-wrapper,
+.swiper-slide {
+  overflow: visible !important;
+}
+
+/* Card container – only sets width */
+.review-card-container {
+  width: 100%;
+  display: inline-block;
+}
+
+/* The card itself – no transform by default */
+.review-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  height: auto;
+  z-index: 1;
+}
+
+.review-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Size classes */
+.size-small {
+  width: 180px;
+}
+.size-medium {
+  width: 220px;
+}
+.size-large {
+  width: 260px;
+}
+.size-wide {
+  width: 320px;
+}
+.size-tall {
+  width: 240px;
+}
+
+/* Hover: scale up and rotate slightly */
+.review-card:hover {
+  transform: scale(1.7) rotate(3deg);
+  z-index: 100;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}

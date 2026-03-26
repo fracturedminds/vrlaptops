@@ -1,0 +1,26 @@
+.navbar {
+    background-color:#1e1e2f !important;  /* or little lighter than this shade */
+  }
+  .navbar-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  
+  
+  .search-bar {
+    width: 40%;
+    background-color: rgb(246, 244, 244);
+    border-radius: 5px;
+  }
+  .search-bar input::placeholder {
+    color:#1e1e2f; 
+    opacity: 1;    
+  }
+  
+  .enquire-btn {
+    background-color: #eb2323  !important;
+    color: white !important;
+    font-weight: bolder;
+  }
