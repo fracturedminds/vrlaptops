@@ -1,109 +1,123 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../services/firebase"; // Corrected import path
+import {
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Typography,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
+import { db } from "../services/firebase";
 import LaptopForm from "./laptopForm";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Dialog from "@mui/material/Dialog"
-import DialogTitle from "@mui/material/DialogTitle"
-import DialogContent from "@mui/material/DialogContent"
+import type Laptop from "../types/laptop";
 
+interface LaptopListProps {
+  refreshSignal?: number;
+}
 
-// Define a type for the laptop data for better type safety
-interface Laptop {
-    id: string
-    name: string
-    brand: string
-    quantity: number
-    price: number
-    offerPrice: number
-    processor: string
-    ram: string
-    disk: string
-    screenSize: string
-    inStock: boolean
-    featured: boolean
-    createdAt: Date
-    updatedAt: Date
-  }
-  // Add other laptop properties here as needed
-
-
-export default function LaptopList() {
+export default function LaptopList({ refreshSignal = 0 }: LaptopListProps) {
   const [laptops, setLaptops] = useState<Laptop[]>([]);
-  const [open,setOpen] = useState(false)
-  const [selectedLaptop,setSelectedLaptop] = useState<any>(null)
+  const [open, setOpen] = useState(false);
+  const [selectedLaptop, setSelectedLaptop] = useState<Laptop | null>(null);
 
   const fetchLaptops = async () => {
     const snapshot = await getDocs(collection(db, "laptops"));
     const list = snapshot.docs.map(
-      (doc) =>
+      (itemDoc) =>
         ({
-          id: doc.id,
-          ...doc.data(),
+          id: itemDoc.id,
+          ...itemDoc.data(),
         } as Laptop)
     );
     setLaptops(list);
   };
 
-
   useEffect(() => {
     fetchLaptops();
-  }, []);
+  }, [refreshSignal]);
 
   const handleDelete = async (id: string) => {
     await deleteDoc(doc(db, "laptops", id));
-    setLaptops(prev => prev.filter(l => l.id !== id))
+    setLaptops((prev) => prev.filter((laptop) => laptop.id !== id));
   };
-  const handleEdit = (laptop:any) => {
-    setSelectedLaptop(laptop)
-    setOpen(true)
-  } 
-    
+
+  const handleEdit = (laptop: Laptop) => {
+    setSelectedLaptop(laptop);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedLaptop(null);
+  };
+
   return (
-    <div>
-      {laptops.map((laptop) => (
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          key={laptop.id}
-          sx={{
-            border: "1px solid #ddd",
-            padding: "10px",
-            marginBottom: "10px",
-          }}
-        >
-          <span>{laptop.name}</span>
-          <div>
-            <Button variant="contained" size="small" onClick={() => handleEdit(laptop)} sx={{ mr: 1 }}>
-              View/Edit
-              <Dialog open={open} onClose={()=>setOpen(false)} maxWidth="md" fullWidth>
-
-              <DialogTitle>Edit Laptop</DialogTitle>
-
-              <DialogContent>
-
-              <LaptopForm
-                  closeForm={()=>setOpen(false)}
-                  editLaptop={selectedLaptop}
-                 />
-
-              </DialogContent>
-
-              </Dialog>
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              size="small"
-              onClick={() => handleDelete(laptop.id)}
+    <>
+      <Stack spacing={1.2}>
+        {laptops.map((laptop) => (
+          <Box
+            key={laptop.id}
+            sx={{
+              border: "1px solid #e3e6ee",
+              borderRadius: 2,
+              px: { xs: 1.2, sm: 1.6 },
+              py: { xs: 1.1, sm: 1.3 },
+              bgcolor: "#fff",
+            }}
+          >
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              justifyContent="space-between"
+              alignItems={{ xs: "flex-start", sm: "center" }}
+              spacing={1}
             >
-              Delete
-            </Button>
-          </div>
-        </Stack>
-      ))}
-    </div>
+              <Box>
+                <Typography sx={{ fontWeight: 600 }}>{laptop.name}</Typography>
+                <Stack direction="row" spacing={1} sx={{ mt: 0.6, flexWrap: "wrap", rowGap: 0.6 }}>
+                  <Chip label={laptop.brand} size="small" />
+                  <Chip label={`₹${Number(laptop.offerPrice || laptop.price).toLocaleString()}`} size="small" color="primary" variant="outlined" />
+                  {laptop.inStock ? <Chip label="In Stock" size="small" color="success" /> : <Chip label="Out of Stock" size="small" color="default" />}
+                </Stack>
+              </Box>
+
+              <Stack direction="row" spacing={1} sx={{ width: { xs: "100%", sm: "auto" } }}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<EditIcon />}
+                  onClick={() => handleEdit(laptop)}
+                  sx={{ width: { xs: "100%", sm: "auto" } }}
+                >
+                  View / Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                  startIcon={<DeleteOutlineIcon />}
+                  onClick={() => handleDelete(laptop.id)}
+                  sx={{ width: { xs: "100%", sm: "auto" } }}
+                >
+                  Delete
+                </Button>
+              </Stack>
+            </Stack>
+          </Box>
+        ))}
+      </Stack>
+
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogTitle>Edit Laptop</DialogTitle>
+        <DialogContent>
+          <LaptopForm closeForm={handleClose} editLaptop={selectedLaptop} onSaved={fetchLaptops} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

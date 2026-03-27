@@ -46,7 +46,7 @@ export default function LaptopDetailsDialog({ open, onClose, laptop }: Props) {
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Rating value={laptop.rating || 4} precision={0.5} readOnly />
               <Typography variant="body2" sx={{ ml: 1 }}>
-                ({laptop.reviews || 0} reviews)
+                {Number(laptop.rating || 4).toFixed(1)}
               </Typography>
             </Box>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './navbar';
 import Footer from './footer';
+import { Box } from '@mui/material';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -10,7 +11,9 @@ interface LayoutProps {
     return (
       <>
         <Navbar />
-        <main style={{ minHeight: '80vh', padding: '20px' }}>{children}</main>
+        <Box component="main" className="app-main">
+          {children}
+        </Box>
         <Footer/>
       </>
     );

@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 import Box from '@mui/material/Box';
-import '../../node_modules/swiper/swiper.min.css';
-import '../../node_modules/swiper/modules/pagination.css';
+import "swiper/css";
+import "swiper/css/pagination";
 
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
@@ -29,6 +29,7 @@ export default function Banner() {
 
   // Intersection Observer to detect visibility
   useEffect(() => {
+    const target = trustRef.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
@@ -36,13 +37,13 @@ export default function Banner() {
       { threshold: 0.3 } // adjust as needed
     );
 
-    if (trustRef.current) {
-      observer.observe(trustRef.current);
+    if (target) {
+      observer.observe(target);
     }
 
     return () => {
-      if (trustRef.current) {
-        observer.unobserve(trustRef.current);
+      if (target) {
+        observer.unobserve(target);
       }
     };
   }, []);
@@ -91,9 +92,18 @@ export default function Banner() {
 
   return (
     <>
-      <Box sx={{ width: "100%", maxWidth: "1400px", position: "relative", mb: "20px" }}>
+      <Box
+        sx={{
+          width: "100%",
+          position: "relative",
+          mb: 2,
+          px: { xs: 0, sm: 1, md: 2, lg: 3 },
+          pt: { xs: 0, md: 2 },
+        }}
+      >
         <Swiper
-          modules={[Autoplay, Navigation, Pagination]}
+          className="banner-swiper"
+          modules={[Autoplay, Pagination]}
           slidesPerView={1}
           spaceBetween={0}
           loop={true}
@@ -102,7 +112,7 @@ export default function Banner() {
             disableOnInteraction: false,
             pauseOnMouseEnter: false,
           }}
-          navigation={true}
+          navigation={false}
           pagination={{ clickable: true }}
           grabCursor={false}
           style={{ width: "100%", height: "auto" }}
@@ -112,8 +122,13 @@ export default function Banner() {
               <Box
                 sx={{
                   width: "100%",
-                  aspectRatio: "21/9",
+                  height: { xs: 240, sm: 320, md: 400, lg: 500, xl: 560 },
                   overflow: "hidden",
+                  borderRadius: { xs: 0, md: 3 },
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  bgcolor: "#f4f6fb",
                 }}
               >
                 <img
@@ -122,7 +137,8 @@ export default function Banner() {
                   style={{
                     width: "100%",
                     height: "100%",
-                    objectFit: "cover",
+                    objectFit: "contain",
+                    objectPosition: "center",
                   }}
                 />
               </Box>

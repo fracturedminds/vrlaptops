@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import {
   Box,
   TextField,
@@ -12,6 +11,9 @@ import {
 import AdminPage from '../pages/adminpage';
 
 export default function AdminGate() {
+  const adminUsername = import.meta.env.VITE_ADMIN_USERNAME;
+  const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -25,18 +27,18 @@ export default function AdminGate() {
     }
   }, []);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    try {
-      const res = await axios.post('https://3002-firebase-vt-1773146867254.cluster-yylgzpipxrar4v4a72liastuqy.cloudworkstations.dev/auth/login', {
-        username,
-        password,
-      });
-      localStorage.setItem('adminToken', res.data.access_token);
+    if (!adminUsername || !adminPassword) {
+      setError('Admin credentials are not configured in .env');
+      return;
+    }
+
+    if (username === adminUsername && password === adminPassword) {
+      localStorage.setItem('adminToken', 'local-admin-authenticated');
       setIsAuthenticated(true);
-    } catch (err) {
-      console.log(err);
+    } else {
       setError('Invalid username or password');
     }
   };

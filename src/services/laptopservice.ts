@@ -1,16 +1,17 @@
 import { db } from "./firebase";
-import type {Laptop} from "../types/laptop"
+import type Laptop from "../types/laptop"
 import { collection, addDoc, updateDoc, doc, getDocs } from "firebase/firestore";
 
-// Define a type for the laptop data for better type safety
+type NewLaptop = Omit<Laptop, "id">;
 
 
-export const addLaptop = async (laptop: Laptop) => {
+export const addLaptop = async (laptop: NewLaptop) => {
   await addDoc(collection(db, "laptops"), laptop);
 };
 
 
 export const updateLaptop = async (id: string, laptop: Partial<Laptop>) => {
+  console.log("Updating laptop document:", { id, name: laptop.name, images: laptop.imgUrl?.length ?? 0 });
   const laptopDoc = doc(db, "laptops", id);
   await updateDoc(laptopDoc, {
       ...laptop,

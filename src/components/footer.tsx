@@ -32,20 +32,21 @@ const Footer: FC = () => {
         bgcolor: '#1e1e2f',
         color: '#f0f0f0',
         py: { xs: 4, md: 5 },
+        px: { xs: 1, sm: 0 },
         borderTop: '4px solid #ff8c42',
       }}
     >
       <Container maxWidth="lg">
-        <Grid container spacing={4} justifyContent="space-between">
+        <Grid container spacing={{ xs: 3, md: 4 }} justifyContent="space-between">
           {/* Column 1: Logo & Social Media */}
           <Grid item xs={12} md={4}>
             <Box sx={{ mb: 2 }}>
               {/* Replace the src with your actual logo */}
-              <img
-                src={logo}
-                alt="VR Laptops World Logo"
-                style={{ maxWidth: '100%', height: '20vh' }}
-              />
+                <img
+                  src={logo}
+                  alt="VR Laptops World Logo"
+                  style={{ maxWidth: '100%', height: 'clamp(64px, 14vh, 120px)' }}
+                />
             </Box>
             <Typography
               variant="subtitle2"
@@ -56,7 +57,7 @@ const Footer: FC = () => {
             <Typography variant="body2" sx={{ color: '#cccccc', mb: 2, fontSize:"0.8rem" }}>
               Follow us for updates, offers, and new arrivals.
             </Typography>
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', rowGap: 1 }}>
               <Link
                 href="https://wa.me/916300761707" // replace with actual WhatsApp link
                 target="_blank"
@@ -117,7 +118,7 @@ const Footer: FC = () => {
             >
               About Us
             </Typography>
-            <Typography variant="body2" sx={{ mb: 1.5, color: '#dddddd',fontSize:"0.8rem" }}>
+            <Typography variant="body2" sx={{ mb: 1.5, color: '#dddddd',fontSize:"0.8rem", pr: { md: 1 } }}>
               <Box component="span" sx={{ color: '#ff8c42', fontWeight: 500 }}>
                 VR LAPTOPS WORLD
               </Box>{' '}
@@ -209,7 +210,7 @@ const Footer: FC = () => {
                   primary="South India Shopping mall, 23-1526, beside Line, near Madras Bustand Wahabpeta, Ramesh Reddy Nagar, Nellore, Andhra Pradesh 524003"
                   primaryTypographyProps={{
                     variant: 'body2',
-                    sx: { color: '#cccccc' },
+                    sx: { color: '#cccccc', wordBreak: 'break-word' },
                   }}
                 />
               </ListItem>

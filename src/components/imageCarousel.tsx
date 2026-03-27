@@ -1,7 +1,7 @@
 // components/ImageCarousel.tsx
 
 import { useState } from "react"
-import { Box, IconButton } from "@mui/material"
+import { Box, Dialog, IconButton } from "@mui/material"
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 
@@ -14,6 +14,7 @@ export default function ImageCarousel({ images, height = 180 }: Props) { // CHAN
 
   const imageArray = Array.isArray(images) ? images : [images];
   const [index, setIndex] = useState(0)
+  const [isZoomOpen, setIsZoomOpen] = useState(false)
 
   const prev = () => {
     if (imageArray.length <= 1) return;
@@ -68,8 +69,10 @@ export default function ImageCarousel({ images, height = 180 }: Props) { // CHAN
             maxHeight: "100%",
             width: "auto",
             height: "auto",
-            objectFit: "contain"
+            objectFit: "contain",
+            cursor: "zoom-in"
           }}
+          onClick={() => setIsZoomOpen(true)}
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';
             const parent = (e.target as HTMLImageElement).parentElement;
@@ -158,6 +161,41 @@ export default function ImageCarousel({ images, height = 180 }: Props) { // CHAN
           ))}
         </Box>
       )}
+
+      <Dialog
+        open={isZoomOpen}
+        onClose={() => setIsZoomOpen(false)}
+        maxWidth="lg"
+        PaperProps={{
+          sx: {
+            background: "transparent",
+            boxShadow: "none",
+            overflow: "visible",
+          },
+        }}
+        BackdropProps={{
+          sx: {
+            backdropFilter: "blur(8px)",
+            background: "rgba(8, 11, 22, 0.45)",
+          },
+        }}
+      >
+        <Box
+          component="img"
+          src={imageArray[index]}
+          alt={`Zoomed laptop view ${index + 1}`}
+          sx={{
+            display: "block",
+            maxWidth: "min(92vw, 980px)",
+            maxHeight: "88vh",
+            width: "auto",
+            height: "auto",
+            objectFit: "contain",
+            borderRadius: 1.5,
+            boxShadow: "0 18px 40px rgba(0, 0, 0, 0.35)",
+          }}
+        />
+      </Dialog>
     </Box>
   )
 }

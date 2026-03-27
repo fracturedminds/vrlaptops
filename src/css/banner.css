@@ -1,33 +1,66 @@
 
-.swiper-pagination{
-  bottom: 20px !important;
+.banner-swiper .swiper-pagination {
+  bottom: 12px !important;
 }
-.swiper-pagination-bullet-active{
-  background:red; /* olive green */
-  opacity:1;
+
+.banner-swiper .swiper-pagination-bullet-active {
+  background: #eb2323;
+  opacity: 1;
 }
 
 .trust-container {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  /* keep your existing styles */
+  width: 100%;
+  margin: 0;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 28px;
   background: rgb(205, 234, 244);
-  padding: 10px 0;
+  padding: 14px 16px;
+  flex-wrap: wrap;
 }
 
-  .trust-item{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:500;
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  white-space: normal;
+  text-align: center;
+}
+
+.trust-item p {
+  margin: 0;
+}
+
+.trust-icon {
+  color: #1e1e2f;
+  font-size: 28px !important;
+}
+
+@media (max-width: 768px) {
+  .trust-container {
+    justify-content: space-between;
+    gap: 12px;
   }
-  .trust-icon{
-    color:#1e1e2f;
-    font-size:28px !important;
+
+  .trust-item {
+    flex: 1 1 calc(50% - 12px);
+    justify-content: center;
   }
+}
+
+@media (max-width: 480px) {
+  .trust-container {
+    padding: 12px 10px;
+  }
+
+  .trust-item {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .trust-icon {
+    font-size: 24px !important;
+  }
+}

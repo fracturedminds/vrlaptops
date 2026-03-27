@@ -1,28 +1,49 @@
-/* Ensure Swiper containers allow overflow */
-.swiper,
-.swiper-wrapper,
-.swiper-slide {
-  overflow: visible !important;
+.reviews-block {
+  padding: 28px 16px 44px;
+  background: #f9f9f9;
+  overflow-x: hidden;
 }
 
-/* Card container – only sets width */
+.reviews-header {
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+.reviews-carousel {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 8px 0 36px;
+}
+
+@media (max-width: 1200px) {
+  .reviews-header,
+  .reviews-carousel {
+    max-width: 95%;
+  }
+}
+
+.reviews-carousel .swiper-pagination {
+  bottom: 8px !important;
+}
+
+.reviews-carousel .swiper-pagination-bullet-active {
+  background: #eb2323;
+}
+
 .review-card-container {
   width: 100%;
-  display: inline-block;
+  height: 100%;
 }
 
-/* The card itself – no transform by default */
 .review-card {
-  background: white;
-  border-radius: 16px;
+  background: #fff;
+  border-radius: 14px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  cursor: pointer;
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   width: 100%;
-  height: auto;
-  z-index: 1;
+  height: 100%;
+  cursor: zoom-in;
 }
 
 .review-card img {
@@ -32,26 +53,40 @@
   object-fit: contain;
 }
 
-/* Size classes */
-.size-small {
-  width: 180px;
-}
-.size-medium {
-  width: 220px;
-}
-.size-large {
-  width: 260px;
-}
-.size-wide {
-  width: 320px;
-}
-.size-tall {
-  width: 240px;
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
 }
 
-/* Hover: scale up and rotate slightly */
-.review-card:hover {
-  transform: scale(1.7) rotate(3deg);
-  z-index: 100;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+.review-modal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(8, 11, 22, 0.45) !important;
+}
+
+.review-modal-paper {
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  max-height: 90vh;
+}
+
+.review-modal-image {
+  display: block;
+  max-width: min(92vw, 980px);
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 600px) {
+  .reviews-block {
+    padding: 24px 12px 38px;
+  }
+
+  .reviews-carousel {
+    padding-bottom: 30px;
+  }
 }

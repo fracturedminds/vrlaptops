@@ -1,8 +1,27 @@
+const env = import.meta.env;
+
+const requiredVars = [
+  "VITE_FIREBASE_API_KEY",
+  "VITE_FIREBASE_AUTH_DOMAIN",
+  "VITE_FIREBASE_PROJECT_ID",
+  "VITE_FIREBASE_STORAGE_BUCKET",
+  "VITE_FIREBASE_MESSAGING_SENDER_ID",
+  "VITE_FIREBASE_APP_ID",
+] as const;
+
+const missingVars = requiredVars.filter((key) => !env[key]);
+
+if (missingVars.length > 0) {
+  throw new Error(
+    `Missing Firebase env variables: ${missingVars.join(", ")}`
+  );
+}
+
 export const firebaseConfig = {
-    apiKey: "AIzaSyDgP-5Cb1mvmmrfkpgvnZ1Ant0EgRQcnsE",
-    authDomain: "app123-135a7.firebaseapp.com",
-    projectId: "app123-135a7",
-    storageBucket: "app123-135a7.appspot.com",
-    messagingSenderId: "87062569926",
-    appId: "1:87062569926:web:8b0b36cd125687fbe308c7"
-  };
+  apiKey: env.VITE_FIREBASE_API_KEY,
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: env.VITE_FIREBASE_APP_ID,
+};

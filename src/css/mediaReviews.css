@@ -1,0 +1,136 @@
+.realexp-block {
+  padding: 28px 16px 44px;
+  background: #f7f9fc;
+  overflow-x: hidden;
+}
+
+.realexp-header {
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+.realexp-carousel {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 8px 0 36px;
+}
+
+@media (max-width: 1200px) {
+  .realexp-header,
+  .realexp-carousel {
+    max-width: 95%;
+  }
+}
+
+.realexp-carousel .swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+.realexp-carousel .swiper-pagination {
+  bottom: 8px !important;
+}
+
+.realexp-carousel .swiper-pagination-bullet-active {
+  background: #eb2323;
+}
+
+.realexp-card {
+  position: relative;
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.realexp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+}
+
+.realexp-thumbnail {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  display: block;
+}
+
+.realexp-instagram-preview {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border: 0;
+  pointer-events: none;
+  background: #000;
+}
+
+.realexp-thumbnail-fallback {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1e2538, #0f1526);
+  color: #f4f6fb;
+}
+
+.realexp-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.08));
+}
+
+.realexp-source-chip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(17, 22, 36, 0.75);
+}
+
+.realexp-modal-backdrop {
+  backdrop-filter: blur(8px);
+  background: rgba(8, 11, 22, 0.45) !important;
+}
+
+.realexp-modal-paper {
+  border-radius: 14px !important;
+}
+
+.realexp-embed-wrap {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 80vh;
+}
+
+.realexp-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 10px;
+}
+
+@media (min-width: 1024px) {
+  .realexp-card {
+    width: min(100%, 250px);
+  }
+}
+
+@media (max-width: 600px) {
+  .realexp-block {
+    padding: 24px 12px 38px;
+  }
+
+  .realexp-carousel {
+    padding-bottom: 30px;
+  }
+}

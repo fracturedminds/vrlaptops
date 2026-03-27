@@ -1,26 +1,119 @@
 .navbar {
-    background-color:#1e1e2f !important;  /* or little lighter than this shade */
-  }
+  background-color: #1e1e2f !important;
+}
+
+.navbar-toolbar {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  min-height: 84px !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 10px 6px 0 !important;
+}
+
+@media (max-width: 1200px) {
   .navbar-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    max-width: 95%;
   }
-  
-  
-  
-  .search-bar {
-    width: 40%;
-    background-color: rgb(246, 244, 244);
-    border-radius: 5px;
+}
+
+.navbar-logo-wrap {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-left: -8px;
+}
+
+.navbar-logo {
+  height: 66px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+}
+
+.navbar-center-branding {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.navbar-title {
+  color: #ffffff;
+  font-size: clamp(1.08rem, 1.35vw, 1.28rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.18px;
+}
+
+.navbar-subtitle {
+  color: #d4d9ef;
+  font-size: clamp(0.72rem, 0.88vw, 0.84rem) !important;
+  font-weight: 500 !important;
+}
+
+.enquire-btn {
+  background-color: #eb2323 !important;
+  color: white !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  padding-inline: 16px !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .navbar-toolbar {
+    min-height: 70px !important;
+    padding: 6px 10px 6px 4px !important;
+    gap: 6px;
   }
-  .search-bar input::placeholder {
-    color:#1e1e2f; 
-    opacity: 1;    
+
+  .navbar-logo {
+    height: 44px;
   }
-  
+
+  .navbar-logo-wrap {
+    margin-left: 0;
+  }
+
+  .navbar-subtitle {
+    display: none;
+  }
+
+  .navbar-title {
+    display: none;
+  }
+
   .enquire-btn {
-    background-color: #eb2323  !important;
-    color: white !important;
-    font-weight: bolder;
+    min-width: 0 !important;
+    padding-inline: 10px !important;
+    font-size: 0.72rem !important;
   }
+}
+
+@media (max-width: 390px) {
+  .navbar-toolbar {
+    padding-right: 6px !important;
+  }
+
+  .navbar-logo {
+    height: 38px;
+  }
+
+  .navbar-center-branding {
+    display: none;
+  }
+
+  .enquire-btn {
+    padding-inline: 8px !important;
+    font-size: 0.68rem !important;
+  }
+}

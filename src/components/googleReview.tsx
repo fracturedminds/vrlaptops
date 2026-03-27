@@ -1,9 +1,10 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Typography } from "@mui/material";
-
 import Box from "@mui/material/Box";
-import "../css/googleReview.css"; // we'll add the CSS below
+import Dialog from "@mui/material/Dialog";
+import "../css/googleReview.css";
+import { useState } from "react";
 
 import review1 from "../assets/googleReviews/r1.png";
 import review2 from "../assets/googleReviews/r2.png";
@@ -17,55 +18,85 @@ import review9 from "../assets/googleReviews/r9.png";
 import review10 from "../assets/googleReviews/r10.png";
 
 export default function ReviewCarousel() {
-    const reviews = [
-      review1, review2, review3, review4, review5,
-      review6, review7, review8, review9, review10,
-    ];
-  
-    const sizeClasses = ["size-small", "size-medium", "size-large", "size-wide", "size-tall"];
-  
-    return (
-        <>  
-        
-    <Box sx={{ py: 4, backgroundColor: "#f9f9f9", overflowX: "clip" }}>
-    <Box className="review-section" >
-              <Typography variant="h4" align="center"
-        sx={{ mb: 4, fontWeight: 600 }}>
-                 <span>Reviews</span>
-              </Typography>
-          </Box>  
+  const [selectedReview, setSelectedReview] = useState<string | null>(null);
+
+  const reviews = [
+    review1,
+    review2,
+    review3,
+    review4,
+    review5,
+    review6,
+    review7,
+    review8,
+    review9,
+    review10,
+  ];
+
+  return (
+    <Box className="reviews-block">
+      <Box className="reviews-header">
+        <Typography variant="h4" align="center" sx={{ mb: 1, fontWeight: 600 }}>
+          Reviews
+        </Typography>
+      </Box>
+
       <Swiper
+        className="reviews-carousel"
         modules={[Autoplay, Pagination]}
-        slidesPerView="auto"
+        slidesPerView={1.2}
         spaceBetween={16}
-        centeredSlides={true}
-        loop={true}
+        centeredSlides={false}
+        loop
         autoplay={{
-          delay: 3000,
+          delay: 2800,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
         pagination={{ clickable: true }}
-        grabCursor={true}
-        style={{ padding: "20px 0 40px 0", overflow: "visible" }}
+        breakpoints={{
+          420: { slidesPerView: 1.4, spaceBetween: 14 },
+          600: { slidesPerView: 2.1, spaceBetween: 16 },
+          900: { slidesPerView: 3, spaceBetween: 18 },
+          1200: { slidesPerView: 3.6, spaceBetween: 20 },
+        }}
       >
-        {reviews.map((src, index) => {
-          const sizeClass = sizeClasses[index % sizeClasses.length];
-          return (
-            <SwiperSlide
-              key={index}
-              style={{ width: "auto", overflow: "visible" }}
-            >
-              <div className={`review-card-container ${sizeClass}`}>
-                <div className="review-card">
-                  <img src={src} alt={`Google review ${index + 1}`} />
-                </div>
+        {reviews.map((src, index) => (
+          <SwiperSlide key={index}>
+            <div className="review-card-container">
+              <div
+                className="review-card"
+                onClick={() => setSelectedReview(src)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    setSelectedReview(src);
+                  }
+                }}
+              >
+                <img src={src} alt={`Google review ${index + 1}`} loading="lazy" />
               </div>
-            </SwiperSlide>
-          );
-        })}
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
+
+      <Dialog
+        open={Boolean(selectedReview)}
+        onClose={() => setSelectedReview(null)}
+        maxWidth="lg"
+        PaperProps={{ className: "review-modal-paper" }}
+        BackdropProps={{ className: "review-modal-backdrop" }}
+      >
+        {selectedReview && (
+          <img
+            src={selectedReview}
+            alt="Selected review"
+            className="review-modal-image"
+          />
+        )}
+      </Dialog>
     </Box>
-        </>
   );
 }

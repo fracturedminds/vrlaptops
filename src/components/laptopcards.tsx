@@ -10,7 +10,7 @@ import ImageCarousel from "./imageCarousel"
 interface Props {
   laptop: Laptop;
   onDetails: () => void;
-};
+}
 export default function LaptopCard({ laptop, onDetails }: Props) {
 
   return (
@@ -19,6 +19,10 @@ export default function LaptopCard({ laptop, onDetails }: Props) {
       sx={{
         borderRadius: 3,
         p: 2,
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
         transition: "0.3s",
         "&:hover": {
           boxShadow: 6,
@@ -28,17 +32,36 @@ export default function LaptopCard({ laptop, onDetails }: Props) {
     >
 
       {/* IMAGE */}
-      <Box sx={{ textAlign: "center", mb: 2, height: 180, display: "flex", alignItems: "center", justifyContent: "center" }}>
-         <ImageCarousel images={laptop.imgUrl} /> 
-      </Box>
-      <CardContent sx={{ p: 0 }}>
+       <Box sx={{ textAlign: "center", mb: 2, height: { xs: 210, sm: 180 }, display: "flex", alignItems: "center", justifyContent: "center" }}>
+         <ImageCarousel images={laptop.imgUrl} />
+       </Box>
+      <CardContent sx={{ p: 0, display: "flex", flexDirection: "column", flexGrow: 1 }}>
         {/* NAME */}
-        <Typography fontWeight={600}>
+        <Typography
+          fontWeight={600}
+          sx={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            minHeight: "3rem",
+          }}
+        >
           {laptop.name}
         </Typography>
 
         {/* SPECS */}
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            minHeight: "2.6rem",
+          }}
+        >
           {laptop.processor}
         </Typography>
 
@@ -50,17 +73,17 @@ export default function LaptopCard({ laptop, onDetails }: Props) {
       <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
         <Rating value={laptop.rating || 4} precision={0.5} readOnly />
         <Typography variant="body2" sx={{ ml: 1 }}>
-          ({laptop.reviews || 120})
+          {Number(laptop.rating || 4).toFixed(1)}
         </Typography>
       </Box>
 
       {/* PRICE */}
       <Typography sx={{ mt: 1, fontWeight: 600 }}>
-        ₹{laptop.price?.toLocaleString()}
+        ₹{(laptop.offerPrice || laptop.price)?.toLocaleString()}
       </Typography>
 
       {/* BUTTONS */}
-      <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+      <Box sx={{ display: "flex", gap: 1, mt: "auto", pt: 2, flexDirection: { xs: "column", sm: "row" } }}>
 
         <Button
           variant="outlined"

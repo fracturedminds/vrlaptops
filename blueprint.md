@@ -2,96 +2,74 @@
 
 ## Overview
 
-This project is a full-stack application with a React frontend and a NestJS backend.
+This project is a **frontend-only** React + TypeScript website for VR Laptops World, built with Vite and integrated directly with Firebase services from the client.
 
-## Frontend
+## Stack
 
-* **Framework:** React
-* **Build Tool:** Vite
-* **Language:** TypeScript
+- **Framework:** React
+- **Language:** TypeScript
+- **Build Tool:** Vite
+- **UI Library:** MUI
+- **Data/Storage:** Firebase Firestore + Firebase Storage + Cloudinary uploads
 
-## Backend
+## Current Implemented Features
 
-* **Framework:** NestJS
-* **Language:** TypeScript
+- Home page with:
+  - responsive sticky navbar
+  - banner carousel with trust counters
+  - featured laptops section
+  - customer reviews carousel
+  - brands carousel
+  - FAQ and footer
+- Laptops listing page with card grid and details dialog
+- Admin page with local credential gate via `.env`
+- Client-side Firebase CRUD for laptop inventory
+- Cloudinary image upload integration via `.env`
 
-## Implemented Features
+## Environment Configuration
 
-* **NestJS Backend Integration:** A NestJS backend has been set up in the `server` directory. The project has been configured to run both the frontend and backend concurrently. API requests from the frontend to `/api` are proxied to the NestJS backend.
-* **Firebase Integration:** Firestore and Firebase Storage have been initialized.
+All runtime configuration is sourced from Vite env variables:
 
-## Firebase Integration Plan
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
+- `VITE_CLOUDINARY_CLOUD_NAME`
+- `VITE_CLOUDINARY_UPLOAD_PRESET`
+- `VITE_ADMIN_USERNAME`
+- `VITE_ADMIN_PASSWORD`
 
-### 1. Configure Firebase SDK
+## Latest UI & Architecture Update
 
-First, you need to get your Firebase project's configuration and add it to your project.
+### Problem Addressed
 
-*   **Log in to Firebase:** If you haven't already, run `firebase login` in your terminal and follow the instructions.
-*   **Select a Firebase Project:** Run `firebase use --add` to select an existing project or `firebase projects:create` to create a new one.
-*   **Get SDK Configuration:** Run `firebase apps:sdkconfig WEB` to get your web app's configuration.
-*   **Create `src/services/firebase.ts`:** Create this file and add the following code, replacing the placeholders with your actual configuration:
+- Website had inconsistent spacing and margins
+- Banner and trust strip had alignment/overflow issues
+- Reviews section was visually unstable and misaligned
+- Laptop cards became uneven with variable content
+- Frontend depended on unnecessary backend auth/proxy setup
 
-```typescript
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+### Changes Made
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+- Added global layout reset and consistent page container behavior
+- Refined navbar sizing, spacing, and responsive behavior
+- Reworked banner and trust strip alignment for all screen sizes
+- Rebuilt reviews carousel styling for stable consistent cards
+- Standardized featured and listing cards with:
+  - equal-height layout
+  - text clamping
+  - stable button alignment
+- Removed frontend backend coupling:
+  - removed API proxy from `vite.config.ts`
+  - removed backend scripts from root `package.json`
+  - removed `src/services/api.ts`
+  - switched admin login to local `.env`-based credential validation
+- Moved hardcoded Firebase and Cloudinary values to `import.meta.env`
+- Added `src/vite-env.d.ts` and `.env.example`
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
-```
+### Notes
 
-### 2. Using Firestore
-
-You can now use Firestore to store and retrieve data. Here's an example of how to add a new laptop document to a "laptops" collection.
-
-*   **Create `src/services/laptopservice.ts`:**
-
-```typescript
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "./firebase";
-import { Laptop } from "../types/laptop"; // Assuming you have a type definition for Laptop
-
-export const createLaptop = async (laptopData: Laptop) => {
-  try {
-    const docRef = await addDoc(collection(db, "laptops"), laptopData);
-    console.log("Document written with ID: ", docRef.id);
-    return docRef.id;
-  } catch (e) {
-    console.error("Error adding document: ", e);
-    return null;
-  }
-};
-```
-
-### 3. Using Firebase Storage
-
-You can use Firebase Storage to upload and manage files. Here's an example of how to upload an image.
-
-*   **Create `src/services/storageservice.ts`:**
-
-```typescript
-import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "./firebase";
-
-export const uploadImage = async (file: File, path: string) => {
-  try {
-    const storageRef = ref(storage, path);
-    const snapshot = await uploadBytes(storageRef, file);
-    console.log("Uploaded a blob or file!", snapshot);
-    return snapshot;
-  } catch (e) {
-    console.error("Error uploading file: ", e);
-    return null;
-  }
-};
-```
+- The `server/` folder is left intact but no longer required for frontend runtime.
+- Root project now runs as client-only (`vite` + TypeScript build).

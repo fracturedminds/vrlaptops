@@ -1,108 +1,214 @@
+import { useMemo, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import CloseIcon from "@mui/icons-material/Close";
+import realExpLinks from "../data/realexp.json";
+import "../css/mediaReviews.css";
 
+interface RealExperienceVideo {
+  source: "instagram" | "youtube";
+  thumbnail?: string;
+  previewEmbedUrl?: string;
+  watchUrl?: string;
+  embedUrl: string;
+}
 
-// Correct embed URLs
-const videos = [
-  {
-    type: "instagram",
-    embedUrl: "https://www.instagram.com/reel/DU4l86XE1Q0/embed",
-  },
-  {
-    type: "youtube",
-    embedUrl: "https://www.youtube.com/embed/laceIUjYzBI?si=H54MxMyIxowYu7u4",
-  },
-  {
-    type: "instagram",
-    embedUrl: "https://www.instagram.com/reel/DUNALGZDsDm/embed",
-  },
-  {
-    type: "youtube",
-    embedUrl: "https://www.youtube.com/embed/Ov8YkzRdivE?si=LbVO1iaXF-dW2ZBD",
-  },
-  {
-    type: "instagram",
-    embedUrl: "https://www.instagram.com/reel/DIJEtdcS-Al/embed",
-  },
-];
+const getInstagramCode = (url: string): string | null => {
+  const match = url.match(/instagram\.com\/(?:reel|p)\/([^/?#]+)/i);
+  return match ? match[1] : null;
+};
+
+const getYoutubeCode = (url: string): string | null => {
+  const shortMatch = url.match(/youtube\.com\/shorts\/([^/?#]+)/i);
+  if (shortMatch) return shortMatch[1];
+
+  const watchMatch = url.match(/[?&]v=([^&]+)/i);
+  if (watchMatch) return watchMatch[1];
+
+  const youtuMatch = url.match(/youtu\.be\/([^/?#]+)/i);
+  if (youtuMatch) return youtuMatch[1];
+
+  return null;
+};
+
+const buildYoutubeEmbedUrl = (videoCode: string) => {
+  const embedUrl = new URL(`https://www.youtube-nocookie.com/embed/${videoCode}`);
+  embedUrl.searchParams.set("autoplay", "1");
+  embedUrl.searchParams.set("playsinline", "1");
+  embedUrl.searchParams.set("rel", "0");
+  embedUrl.searchParams.set("modestbranding", "1");
+  embedUrl.searchParams.set("iv_load_policy", "3");
+
+  if (typeof window !== "undefined") {
+    embedUrl.searchParams.set("origin", window.location.origin);
+  }
+
+  return embedUrl.toString();
+};
+
+const buildVideo = (url: string): RealExperienceVideo | null => {
+  const instagramCode = getInstagramCode(url);
+  if (instagramCode) {
+    return {
+      source: "instagram",
+      previewEmbedUrl: `https://www.instagram.com/reel/${instagramCode}/embed`,
+      embedUrl: `https://www.instagram.com/reel/${instagramCode}/embed`,
+    };
+  }
+
+  const youtubeCode = getYoutubeCode(url);
+  if (youtubeCode) {
+    return {
+      source: "youtube",
+      thumbnail: `https://img.youtube.com/vi/${youtubeCode}/hqdefault.jpg`,
+      watchUrl: `https://www.youtube.com/watch?v=${youtubeCode}`,
+      embedUrl: buildYoutubeEmbedUrl(youtubeCode),
+    };
+  }
+
+  return null;
+};
 
 export default function MediaReviews() {
+  const [selectedVideo, setSelectedVideo] = useState<RealExperienceVideo | null>(null);
+  const [brokenThumbs, setBrokenThumbs] = useState<Record<string, boolean>>({});
+
+  const videos = useMemo(
+    () => realExpLinks.map((link) => buildVideo(link)).filter((item): item is RealExperienceVideo => item !== null),
+    []
+  );
+
   return (
-    <Box sx={{ width: "100%", py: 4, bgcolor: "#f9f9f9" }}>
-      <Typography
-        variant="h4"
-        align="center"
-        sx={{ mb: 4, fontWeight: 600 }}
-      >
-        Real Experience
-      </Typography>
+    <Box className="realexp-block">
+      <Box className="realexp-header">
+        <Typography variant="h4" align="center" sx={{ mb: 1, fontWeight: 600 }}>
+          Real Experiences
+        </Typography>
+      </Box>
 
       <Swiper
+        className="realexp-carousel"
         modules={[Autoplay, Pagination]}
-        slidesPerView={"auto"}
-        spaceBetween={20}
+        slidesPerView={1.2}
+        spaceBetween={10}
         centeredSlides={false}
-        loop={true}
+        loop
         autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
-          }}        pagination={{ clickable: true }}
-        grabCursor={true}
-        style={{
-          padding: "20px 16px 40px 16px",
-          overflow: "visible",
+          delay: 2600,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        }}
+        pagination={{ clickable: true }}
+        breakpoints={{
+          420: { slidesPerView: 1.4, spaceBetween: 10 },
+          600: { slidesPerView: 2.1, spaceBetween: 12 },
+          900: { slidesPerView: 3, spaceBetween: 12 },
+          1200: { slidesPerView: 3.6, spaceBetween: 14 },
         }}
       >
         {videos.map((video, idx) => (
-          <SwiperSlide
-            key={idx}
-            style={{
-              width: "auto",
-              height: "auto",
-              overflow: "visible",
-            }}
-          >
+          <SwiperSlide key={`${video.embedUrl}-${idx}`}>
             <Box
-              sx={{
-                backgroundColor: "#fff",
-                borderRadius: 2,
-                boxShadow: 3,
-                overflow: "hidden",
-                transition: "transform 0.3s ease",
-                "&:hover": {
-                  transform: "scale(1.02)",
-                  boxShadow: 6,
-                },
+              className="realexp-card"
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedVideo(video)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  setSelectedVideo(video);
+                }
               }}
             >
-              <Box
-                sx={{
-                  position: "relative",
-                  paddingBottom: video.type === "youtube" ? "56.25%" : "100%",
-                  height: 0,
-                }}
-              >
-                <iframe
-                  src={video.embedUrl}
-                  title={`Review ${idx + 1}`}
-                  allowFullScreen
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    border: "none",
-                  }}
+              {video.source === "instagram" ? (
+                <Box
+                  component="iframe"
+                  src={video.previewEmbedUrl}
+                  title={`Instagram reel preview ${idx + 1}`}
+                  className="realexp-instagram-preview"
+                  loading="lazy"
+                  tabIndex={-1}
+                  aria-hidden="true"
                 />
+              ) : !brokenThumbs[video.embedUrl] ? (
+                <Box
+                  component="img"
+                  src={video.thumbnail}
+                  alt={`Real experience ${idx + 1}`}
+                  className="realexp-thumbnail"
+                  onError={() =>
+                    setBrokenThumbs((prev) => ({
+                      ...prev,
+                      [video.embedUrl]: true,
+                    }))
+                  }
+                />
+              ) : (
+                <Box className="realexp-thumbnail-fallback">
+                  <Typography variant="body2" fontWeight={600}>
+                    Preview unavailable
+                  </Typography>
+                </Box>
+              )}
+              {video.source === "youtube" && (
+                <Box className="realexp-play-overlay">
+                  <PlayCircleOutlineIcon sx={{ fontSize: 48 }} />
+                </Box>
+              )}
+              <Box className="realexp-source-chip">
+                {video.source === "instagram" ? "Reel" : "Short"}
               </Box>
             </Box>
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <Dialog
+        open={Boolean(selectedVideo)}
+        onClose={() => setSelectedVideo(null)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{ className: "realexp-modal-paper" }}
+        BackdropProps={{ className: "realexp-modal-backdrop" }}
+      >
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", pb: 1 }}>
+          <Typography variant="h6">Real Experience</Typography>
+          <IconButton onClick={() => setSelectedVideo(null)}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
+          {selectedVideo && (
+            <Box className="realexp-embed-wrap">
+              <iframe
+                src={selectedVideo.embedUrl}
+                title="Real Experience video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="realexp-iframe"
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            </Box>
+          )}
+          {selectedVideo?.source === "youtube" && selectedVideo.watchUrl && (
+            <Typography variant="body2" sx={{ mt: 1.25, textAlign: "center" }}>
+              If player fails,{" "}
+              <a href={selectedVideo.watchUrl} target="_blank" rel="noreferrer">
+                open this Short directly on YouTube
+              </a>
+              .
+            </Typography>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

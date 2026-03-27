@@ -18,5 +18,4 @@ export default interface Laptop {
     createdAt: Date;
     updatedAt: Date;
     rating: number;
-    reviews: string;
   }
