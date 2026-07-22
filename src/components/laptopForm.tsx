@@ -118,7 +118,6 @@ export default function LaptopForm({ closeForm, editLaptop, onSaved }: LaptopFor
       if (files.length > 0) {
         const uploadPromises = files.map((file) => uploadImage(file));
         const newImageUrls = await Promise.all(uploadPromises);
-        console.log(newImageUrls);
         imageUrls = [...imageUrls, ...newImageUrls];
       }
 
@@ -132,15 +131,19 @@ export default function LaptopForm({ closeForm, editLaptop, onSaved }: LaptopFor
         imgUrl: imageUrls,
         updatedAt: new Date(),
       };
+      console.log(payload);
 
       if (editLaptop) {
+        console.log("Code before Edit laptop);
         await updateLaptop(editLaptop.id, payload);
         setSnackbar({
           open: true,
           message: "Laptop updated successfully!",
           severity: "success",
         });
+        console.log("Code after Edit laptop);
       } else {
+        console.log("Code before Add laptop);
         await addLaptop({
           ...payload,
           createdAt: new Date(),
@@ -150,12 +153,13 @@ export default function LaptopForm({ closeForm, editLaptop, onSaved }: LaptopFor
           message: "Laptop added successfully!",
           severity: "success",
         });
+        console.log("Code after add laptop);
       }
 
       await onSaved?.();
       closeForm();
     } catch (error) {
-      console.error("Laptop form submission failed:", error);
+      console.error("Laptop form submission failed:", error.message);
       setSnackbar({
         open: true,
         message: "Operation failed",
