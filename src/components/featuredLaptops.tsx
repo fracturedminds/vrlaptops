@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { collection, getDocs } from "firebase/firestore"
+import { collection, getDocs, query, where } from "firebase/firestore"
 import { db } from "../services/firebase"
 import { useNavigate } from "react-router-dom"
 
@@ -10,6 +10,8 @@ import type Laptop from "../types/laptop"
 import ImageCarousel from "./imageCarousel"
 import LaptopDetailsDialog from "./laptopdetails"
 import { getWhatsappUrl } from "../utils/contact"
+
+const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET
 
 export default function FeaturedLaptops() {
   const navigate = useNavigate()
@@ -22,7 +24,9 @@ export default function FeaturedLaptops() {
   }, [])
 
   const fetchLaptops = async () => {
-    const snapshot = await getDocs(collection(db, "laptops"))
+    const laptopsCollection = collection(db, "laptops")
+    const q = query(laptopsCollection, where("admin_secret", "==", ADMIN_SECRET))
+    const snapshot = await getDocs(q)
 
     const data = snapshot.docs.map(doc => ({
       id: doc.id,
@@ -129,7 +133,28 @@ export default function FeaturedLaptops() {
                 </Typography>
 
                 <Typography variant="h6" sx={{ mt: 1.5, mb: 2 }}>
-                  ₹{laptop.offerPrice || laptop.price}
+                  {(() => {
+                    const hasOfferPrice = laptop.offerPrice !== undefined && laptop.offerPrice !== 0
+                    const hasPrice = laptop.price !== undefined && laptop.price !== null
+
+                    if (hasOfferPrice && hasPrice) {
+                      return (
+                        <>
+                          <Box
+                            component="span"
+                            sx={{ textDecoration: "line-through", color: "text.secondary", mr: 1, fontSize: "0.95rem" }}
+                          >
+                            ₹{laptop.price}
+                          </Box>
+                          <Box component="span">₹{laptop.offerPrice}</Box>
+                        </>
+                      )
+                    }
+
+                    if (hasOfferPrice) return <>₹{laptop.offerPrice}</>
+                    if (hasPrice) return <>₹{laptop.price}</>
+                    return null
+                  })()}
                 </Typography>
 
                 <Button

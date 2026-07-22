@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, query, where } from "firebase/firestore";
 import {
   Box,
   Button,
@@ -17,6 +17,8 @@ import { db } from "../services/firebase";
 import LaptopForm from "./laptopForm";
 import type Laptop from "../types/laptop";
 
+const ADMIN_SECRET = import.meta.env.VITE_ADMIN_SECRET;
+
 interface LaptopListProps {
   refreshSignal?: number;
 }
@@ -27,7 +29,9 @@ export default function LaptopList({ refreshSignal = 0 }: LaptopListProps) {
   const [selectedLaptop, setSelectedLaptop] = useState<Laptop | null>(null);
 
   const fetchLaptops = async () => {
-    const snapshot = await getDocs(collection(db, "laptops"));
+    const laptopsCollection = collection(db, "laptops");
+    const q = query(laptopsCollection, where("admin_secret", "==", ADMIN_SECRET));
+    const snapshot = await getDocs(q);
     const list = snapshot.docs.map(
       (itemDoc) =>
         ({
