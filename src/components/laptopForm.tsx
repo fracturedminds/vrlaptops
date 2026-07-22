@@ -159,7 +159,7 @@ export default function LaptopForm({ closeForm, editLaptop, onSaved }: LaptopFor
       await onSaved?.();
       closeForm();
     } catch (error) {
-      console.error("Laptop form submission failed:", error.message);
+      console.error("Laptop form submission failed:", error);
       setSnackbar({
         open: true,
         message: "Operation failed",
