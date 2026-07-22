@@ -118,6 +118,7 @@ export default function LaptopForm({ closeForm, editLaptop, onSaved }: LaptopFor
       if (files.length > 0) {
         const uploadPromises = files.map((file) => uploadImage(file));
         const newImageUrls = await Promise.all(uploadPromises);
+        console.log(newImageUrls)l
         imageUrls = [...imageUrls, ...newImageUrls];
       }
 
