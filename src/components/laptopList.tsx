@@ -47,7 +47,8 @@ export default function LaptopList({ refreshSignal = 0 }: LaptopListProps) {
   }, [refreshSignal]);
 
   const handleDelete = async (id: string) => {
-    await deleteDoc(doc(db, "laptops", id));
+    const docRef = doc(db, "laptops", id);
+    await deleteDoc(docRef);
     setLaptops((prev) => prev.filter((laptop) => laptop.id !== id));
   };
 
