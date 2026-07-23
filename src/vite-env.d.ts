@@ -11,6 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_CLOUDINARY_UPLOAD_PRESET: string;
   readonly VITE_ADMIN_USERNAME: string;
   readonly VITE_ADMIN_PASSWORD: string;
+  readonly VITE_ADMIN_SECRET: string;
 }
 
 interface ImportMeta {

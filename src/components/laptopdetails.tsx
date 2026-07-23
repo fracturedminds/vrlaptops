@@ -51,7 +51,28 @@ export default function LaptopDetailsDialog({ open, onClose, laptop }: Props) {
             </Box>
 
             <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: "primary.main" }}>
-              ₹{laptop.price?.toLocaleString()}
+              {(() => {
+                const hasOfferPrice = laptop.offerPrice !== undefined && laptop.offerPrice !== 0
+                const hasPrice = laptop.price !== undefined && laptop.price !== null
+
+                if (hasOfferPrice && hasPrice) {
+                  return (
+                    <>
+                      <Box
+                        component="span"
+                        sx={{ textDecoration: "line-through", color: "text.secondary", mr: 1, fontSize: "1rem", fontWeight: 400 }}
+                      >
+                        ₹{laptop.price.toLocaleString()}
+                      </Box>
+                      <Box component="span">₹{laptop.offerPrice.toLocaleString()}</Box>
+                    </>
+                  )
+                }
+
+                if (hasOfferPrice) return <>₹{laptop.offerPrice.toLocaleString()}</>
+                if (hasPrice) return <>₹{laptop.price.toLocaleString()}</>
+                return null
+              })()}
             </Typography>
 
             {laptop.inStock !== undefined && (
